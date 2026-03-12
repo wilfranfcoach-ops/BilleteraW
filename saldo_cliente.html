@@ -4,48 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Saldo - Panadería</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 300px; }
-        .bakery-logo { font-size: 50px; }
-        h1 { color: #333; font-size: 1.2rem; }
-        .balance { font-size: 2.5rem; color: #27ae60; font-weight: bold; margin: 15px 0; }
-        .user-email { color: #7f8c8d; font-size: 0.9rem; }
+        body { font-family: 'Arial', sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; width: 90%; max-width: 350px; }
+        .logo { font-size: 50px; margin-bottom: 10px; }
+        h1 { color: #333; font-size: 1.1rem; margin-bottom: 20px; }
+        .balance { font-size: 3rem; color: #2ecc71; font-weight: bold; margin-bottom: 10px; }
+        .email { color: #888; font-size: 0.8rem; }
     </style>
 </head>
 <body>
     <div class="card">
-        <div class="bakery-logo">🥖</div>
-        <h1>Hola, este es tu saldo:</h1>
-        <div id="saldo-display" class="balance">Cargando...</div>
-        <div id="email-display" class="user-email">Verificando usuario...</div>
+        <div class="logo">🥖</div>
+        <h1 id="msg">Consultando tu saldo...</h1>
+        <div id="saldo" class="balance">$0</div>
+        <div id="user-email" class="email"></div>
     </div>
 
     <script>
-        // TRUCO MÁGICO: Lee el email de la URL (ej: ?user=test@gmail.com)
         const urlParams = new URLSearchParams(window.location.search);
-        const userEmail = urlParams.get('user');
-        
-        document.getElementById('email-display').innerText = userEmail;
+        const emailBuscado = urlParams.get('user');
+        // REEMPLAZA ESTE LINK POR TU LINK CSV DE GOOGLE SHEETS
+        const csvUrl = 'TU_LINK_CSV_AQUI'; 
 
-        // Aquí conectarás tu Google Sheets (después te enseño a sacar el CSV link)
-        const public_spreadsheet_url = 'TU_LINK_DE_GOOGLE_SHEETS_CSV_AQUI';
+        if (emailBuscado) {
+            document.getElementById('user-email').innerText = emailBuscado;
+            fetch(csvUrl)
+                .then(res => res.text())
+                .then(data => {
+                    const filas = data.split('\n');
+                    const headers = filas[0].split(',');
+                    const colEmail = headers.indexOf('Email');
+                    const colSaldo = headers.indexOf('SaldoReal'); // Verifica que se llame así en tu Excel
 
-        function init() {
-            Tabletop.init({ key: public_spreadsheet_url, callback: showInfo, simpleSheet: true });
+                    let encontrado = false;
+                    for (let i = 1; i < filas.length; i++) {
+                        const celdas = filas[i].split(',');
+                        if (celdas[colEmail] && celdas[colEmail].trim() === emailBuscado.trim()) {
+                            document.getElementById('saldo').innerText = '$' + celdas[colSaldo];
+                            document.getElementById('msg').innerText = '¡Hola! Este es tu saldo:';
+                            encontrado = true;
+                            break;
+                        }
+                    }
+                    if (!encontrado) document.getElementById('msg').innerText = 'Usuario no encontrado';
+                });
         }
-
-        function showInfo(data, tabletop) {
-            const user = data.find(row => row.Email === userEmail);
-            if (user) {
-                document.getElementById('saldo-display').innerText = '$' + user.Saldo;
-            } else {
-                document.getElementById('saldo-display').innerText = 'No encontrado';
-            }
-        }
-
-        window.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
