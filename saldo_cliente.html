@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html>document.getElementById
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -41,7 +41,13 @@
                     for (let i = 1; i < filas.length; i++) {
                         const celdas = filas[i].split(',');
                         if (celdas[colEmail] && celdas[colEmail].trim() === emailBuscado.trim()) {
-                            document.getElementById('saldo').innerText = '$' + celdas[colSaldo];
+                            let valorSaldo = parseFloat(celdas[colSaldo]); // Convierte el texto a número
+                            let saldoFormateado = valorSaldo.toLocaleString('es-CO', {
+                            style: 'currency',
+                            currency: 'COP',
+                            minimumFractionDigits: 0
+});
+document.getElementById('saldo').innerText = saldoFormateado;
                             document.getElementById('msg').innerText = '¡Hola! Este es tu saldo:';
                             encontrado = true;
                             break;
