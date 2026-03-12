@@ -25,7 +25,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const emailBuscado = urlParams.get('user');
         // REEMPLAZA ESTE LINK POR TU LINK CSV DE GOOGLE SHEETS
-        const csvUrl = 'TU_LINK_CSV_AQUI'; 
+        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQEQjmTqUJqi-MGWHuGYgfwz9TPYhRtfkbn4ttVGwrqZQAAvEAb6nGs7mT5ppFmBKUV-dqRFTxd_rjw/pub?gid=440191851&single=true&output=csv'; 
 
         if (emailBuscado) {
             document.getElementById('user-email').innerText = emailBuscado;
