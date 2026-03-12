@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Saldo - Panadería</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 300px; }
+        .bakery-logo { font-size: 50px; }
+        h1 { color: #333; font-size: 1.2rem; }
+        .balance { font-size: 2.5rem; color: #27ae60; font-weight: bold; margin: 15px 0; }
+        .user-email { color: #7f8c8d; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="bakery-logo">🥖</div>
+        <h1>Hola, este es tu saldo:</h1>
+        <div id="saldo-display" class="balance">Cargando...</div>
+        <div id="email-display" class="user-email">Verificando usuario...</div>
+    </div>
+
+    <script>
+        // TRUCO MÁGICO: Lee el email de la URL (ej: ?user=test@gmail.com)
+        const urlParams = new URLSearchParams(window.location.search);
+        const userEmail = urlParams.get('user');
+        
+        document.getElementById('email-display').innerText = userEmail;
+
+        // Aquí conectarás tu Google Sheets (después te enseño a sacar el CSV link)
+        const public_spreadsheet_url = 'TU_LINK_DE_GOOGLE_SHEETS_CSV_AQUI';
+
+        function init() {
+            Tabletop.init({ key: public_spreadsheet_url, callback: showInfo, simpleSheet: true });
+        }
+
+        function showInfo(data, tabletop) {
+            const user = data.find(row => row.Email === userEmail);
+            if (user) {
+                document.getElementById('saldo-display').innerText = '$' + user.Saldo;
+            } else {
+                document.getElementById('saldo-display').innerText = 'No encontrado';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
