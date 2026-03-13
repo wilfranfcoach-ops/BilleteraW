@@ -3,22 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Saldo - Panadería</title>
-   <style>
-    body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #f5d7b1 0%, #e2906d 100%); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-    .card { background: white; padding: 2.5rem; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); text-align: center; width: 85%; max-width: 320px; border: 2px solid #d3835f; }
-    .logo { font-size: 60px; margin-bottom: 10px; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1)); }
-    h1 { color: #5d4037; font-size: 1.2rem; font-weight: 600; margin-bottom: 10px; }
-    .balance { font-size: 3.2rem; color: #d35400; font-weight: 800; margin-bottom: 15px; letter-spacing: -1px; }
-    .email { background: #fef5e7; padding: 5px 15px; border-radius: 20px; color: #a67c52; font-size: 0.85rem; font-weight: bold; display: inline-block; }
-</style>
+    <title>Nospi - Mi Saldo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- ESTILOS ALUSIVOS A NOSPI --- */
+        :root {
+            --azul-oscuro: #0a1f44; /* Tomado de la base del logo oscuro */
+            --azul-medio: #1d71b8;   /* Tomado del degradado de la 'N' */
+            --verde-neon: #39b54a;    /* Tomado de la flecha y el punto */
+            --gris-suave: #f4f7f6;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            /* Fondo con degradado sutil alusivo al logo */
+            background: linear-gradient(135deg, #e0f2f1 0%, #d1c4e9 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: var(--azul-oscuro);
+        }
+
+        .card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(10, 31, 68, 0.15); /* Sombra con tono azul */
+            text-align: center;
+            width: 85%;
+            max-width: 320px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(29, 113, 184, 0.1);
+        }
+
+        /* Decoración de esquina con el color verde */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 60px;
+            height: 60px;
+            background-color: var(--verde-neon);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .logo-container {
+            margin-bottom: 20px;
+        }
+
+        .logo-img {
+            max-width: 120px; /* Ajusta el tamaño según tu gusto */
+            height: auto;
+        }
+
+        h1 {
+            color: var(--azul-oscuro);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .balance {
+            font-size: 3.5rem;
+            /* El saldo resalta con el verde de éxito/crecimiento de Nospi */
+            color: var(--verde-neon);
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+
+        .email-box {
+            background-color: var(--gris-suave);
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            border: 1px solid rgba(10, 31, 68, 0.05);
+        }
+
+        .email {
+            color: var(--azul-medio);
+            font-size: 0.85rem;
+            font-weight: 400;
+            margin: 0;
+        }
+
+        #msg {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+    </style>
 </head>
 <body>
     <div class="card">
-        <div class="logo">🥖</div>
+        <div class="logo-container">
+            <img src="imagenes/logo-nospi.png" alt="Nospi Logo" class="logo-img">
+        </div>
+
         <h1 id="msg">Consultando tu saldo...</h1>
         <div id="saldo" class="balance">$0</div>
-        <div id="user-email" class="email"></div>
+        
+        <div class="email-box">
+            <p id="user-email" class="email"></p>
+        </div>
     </div>
 
     <script>
