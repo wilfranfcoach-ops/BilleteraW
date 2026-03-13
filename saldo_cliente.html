@@ -116,8 +116,17 @@
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const emailBuscado = urlParams.get('user');
+        //const urlParams = new URLSearchParams(window.location.search);//
+        //const emailBuscado = urlParams.get('user');//
+
+        // Captura el parámetro 'user' de la URL
+          const urlParams = new URLSearchParams(window.location.search);
+          const rawUser = urlParams.get('user');
+
+        // Esta es la línea mágica: limpia el %40 y espacios en blanco
+         const emailBuscado = rawUser ? decodeURIComponent(rawUser).trim().toLowerCase() : null;
+
+        console.log("Email procesado:", emailBuscado); // Esto te ayudará a ver en la consola si funciona
         
         // REEMPLAZA ESTE LINK POR TU LINK CSV DE GOOGLE SHEETS
         const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQEQjmTqUJqi-MGWHuGYgfwz9TPYhRtfkbn4ttVGwrqZQAAvEAb6nGs7mT5ppFmBKUV-dqRFTxd_rjw/pub?gid=440191851&single=true&output=csv'; 
