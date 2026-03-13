@@ -117,7 +117,7 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const emailBuscado = decodeURIComponent(params.get('user'));
+        const emailBuscado = params.get('user');
         
         // REEMPLAZA ESTE LINK POR TU LINK CSV DE GOOGLE SHEETS
         const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQEQjmTqUJqi-MGWHuGYgfwz9TPYhRtfkbn4ttVGwrqZQAAvEAb6nGs7mT5ppFmBKUV-dqRFTxd_rjw/pub?gid=440191851&single=true&output=csv'; 
