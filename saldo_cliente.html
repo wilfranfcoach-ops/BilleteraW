@@ -115,44 +115,68 @@
         </div>
     </div>
 
-    <script>
-         const urlParams = new URLSearchParams(window.location.search);
-         const emailBuscado = urlParams.get('user');
+   const urlParams = new URLSearchParams(window.location.search);
+    // 1. Capturamos el correo y lo "limpiamos" (convierte %40 en @ y quita espacios)
+    const emailBuscado = decodeURIComponent(urlParams.get('user') || '').trim().toLowerCase();
+    
+    // TU LINK CSV (Se mantiene igual)
+    const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQEQjmTqUJqi-MGWHuGYgfwz9TPYhRtfkbn4ttVGwrqZQAAvEAb6nGs7mT5ppFmBKUV-dqRFTxd_rjw/pub?gid=440191851&single=true&output=csv'; 
 
-      
-        
-        // REEMPLAZA ESTE LINK POR TU LINK CSV DE GOOGLE SHEETS
-        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQEQjmTqUJqi-MGWHuGYgfwz9TPYhRtfkbn4ttVGwrqZQAAvEAb6nGs7mT5ppFmBKUV-dqRFTxd_rjw/pub?gid=440191851&single=true&output=csv'; 
+    if (emailBuscado) {
+        // Mostramos el email limpio en la pantalla
+        document.getElementById('user-email').innerText = emailBuscado;
 
-        if (emailBuscado) {
-            document.getElementById('user-email').innerText = emailBuscado;
-            fetch(csvUrl)
-                .then(res => res.text())
-                .then(data => {
-                    const filas = data.split('\n');
-                    const headers = filas[0].split(',');
-                    const colEmail = headers.indexOf('Email');
-                    const colSaldo = headers.indexOf('SaldoReal'); // Verifica que se llame así en tu Excel
+        fetch(csvUrl)
+            .then(res => res.text())
+            .then(data => {
+                // Separamos por filas y luego por comas
+                const filas = data.split('\n');
+                const headers = filas[0].split(',');
+                
+                // Buscamos en qué posición están las columnas exactas
+                const colEmail = headers.indexOf('Email');
+                const colSaldo = headers.indexOf('SaldoReal'); 
 
-                    let encontrado = false;
-                    for (let i = 1; i < filas.length; i++) {
-                        const celdas = filas[i].split(',');
-                        if (celdas[colEmail] && celdas[colEmail].trim() === emailBuscado.trim()) {
-                            let valorSaldo = parseFloat(celdas[colSaldo]); // Convierte el texto a número
-                            let saldoFormateado = valorSaldo.toLocaleString('es-CO', {
+                let encontrado = false;
+
+                for (let i = 1; i < filas.length; i++) {
+                    const celdas = filas[i].split(',');
+                    
+                    // Extraemos el email de la fila del Excel y lo limpiamos para comparar
+                    const emailEnExcel = celdas[colEmail] ? celdas[colEmail].trim().toLowerCase() : '';
+
+                    // COMPARACIÓN MAGICA: Ambos están limpios y en minúsculas
+                    if (emailEnExcel === emailBuscado) {
+                        let valorSaldo = parseFloat(celdas[colSaldo]); 
+                        
+                        // Si el saldo no es un número, ponemos 0
+                        if (isNaN(valorSaldo)) valorSaldo = 0;
+
+                        let saldoFormateado = valorSaldo.toLocaleString('es-CO', {
                             style: 'currency',
                             currency: 'COP',
                             minimumFractionDigits: 0
-});
-document.getElementById('saldo').innerText = saldoFormateado;
-                            document.getElementById('msg').innerText = '¡Hola! Este es tu saldo:';
-                            encontrado = true;
-                            break;
-                        }
+                        });
+
+                        document.getElementById('saldo').innerText = saldoFormateado;
+                        document.getElementById('msg').innerText = '¡Hola! Este es tu saldo:';
+                        encontrado = true;
+                        break;
                     }
-                    if (!encontrado) document.getElementById('msg').innerText = 'Usuario no encontrado';
-                });
-        }
-    </script>
+                }
+
+                if (!encontrado) {
+                    document.getElementById('msg').innerText = 'Usuario no encontrado';
+                    document.getElementById('saldo').innerText = "$ 0";
+                }
+            })
+            .catch(err => {
+                console.error("Error al conectar:", err);
+                document.getElementById('msg').innerText = 'Error al cargar la base de datos';
+            });
+    } else {
+        document.getElementById('msg').innerText = 'Por favor, escanea tu código QR';
+    }
+</script>
 </body>
 </html>
