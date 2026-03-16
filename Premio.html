@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Felicidades!</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body { font-family: 'Arial', sans-serif; text-align: center; background-color: #fff9f0; display: flex; flex-direction: column; justify-content: center; height: 100vh; margin: 0; }
+        .card { background: white; margin: 20px; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 2px solid #e67e22; }
+        h1 { color: #e67e22; font-size: 2.5rem; margin-bottom: 10px; }
+        p { color: #5d4037; font-size: 1.2rem; }
+        .pan { font-size: 80px; margin: 20px 0; }
+        .btn { background-color: #e67e22; color: white; padding: 15px 30px; border-radius: 50px; text-decoration: none; font-weight: bold; display: inline-block; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>¡ERES GANADOR! 🥖</h1>
+        <div class="pan">🥐🍫</div>
+        <p>Por tu primera recarga, te has ganado un delicioso</p>
+        <p><strong>PAN DE CHOCOLATE</strong></p>
+        <p>Muestra esta pantalla en la caja para reclamarlo.</p>
+        <a href="#" class="btn" onclick="lanzarConfeti()">¡Celebrar de nuevo!</a>
+    </div>
+
+    <script>
+        // Lanzar confeti al cargar
+        window.onload = function() {
+            lanzarConfeti();
+        };
+
+        function lanzarConfeti() {
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#e67e22', '#f1c40f', '#5d4037']
+            });
+        }
+    </script>
+</body>
+</html>
